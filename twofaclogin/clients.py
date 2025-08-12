@@ -50,8 +50,9 @@ class AuthClient(WebsocketConsumer):
                         from django.urls import reverse
                         from django.contrib.sites.shortcuts import get_current_site
                         
-                        # For now, use a simple approach - in production, use proper URL building
-                        authorize_url = f"http://{settings.ALLOWED_HOSTS[0]}:8000/authorize/{authObj.token1}"
+                        # FIXED: Use localhost since the server is running locally
+                        # In production, this should use the actual domain
+                        authorize_url = f"http://127.0.0.1:8000/authorize/{authObj.token1}"
                         
                         # FIXED: Remove sensitive data from logs
                         print(f"Sending authorization email to {userObj.email}")
