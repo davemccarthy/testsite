@@ -8,7 +8,7 @@ class Authorization(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # REMOVED: password field - storing plaintext passwords is a security vulnerability
     # Instead, we'll trust the Authorization.user relationship and validate token2 + expiry
-    token1 = models.UUIDField(default=uuid.uuid4, unique=True)
+    token1 = models.UUIDField(default=uuid.uuid4, unique=True, null=True, blank=True)
     token2 = models.UUIDField(default=uuid.uuid4, unique=True, null=True, blank=True)
     # FIXED: Use callable for default to avoid being evaluated at import time
     # This ensures each new Authorization gets a fresh expiry time
