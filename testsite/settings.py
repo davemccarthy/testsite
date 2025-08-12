@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-#cd0n(vn#!0h(*9-1dr+_t*w97dgmj-xd8k6znr@9*wui2r9v(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.6']
+# FIXED: Add localhost for development - in production, use your actual domain
+ALLOWED_HOSTS = ['192.168.1.6', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -93,6 +94,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'dave@klynt.com'
 EMAIL_HOST_PASSWORD = 'Dave2880132'
 EMAIL_USE_TLS = True
+# FIXED: Add DEFAULT_FROM_EMAIL setting for consistent email sending
+DEFAULT_FROM_EMAIL = 'dave@klynt.com'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

@@ -18,7 +18,8 @@
 
             <div id="content-main">
 
-                <form method="post" id="user_form" action="auth_first">
+                <!-- FIXED: Use Django URL routing instead of hardcoded path -->
+                <form method="post" id="user_form" action="{% url 'auth_first' %}">
                     {% csrf_token %}
                     <fieldset class="module aligned wide">
                     <div class="form-row field-username">

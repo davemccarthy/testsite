@@ -27,14 +27,35 @@
 
                 //  Thumbs up
                 case "authorized":
-                    window.location = "auth_second?token=" + data.token;
+                    // FIXED: Use Django URL routing instead of hardcoded path
+                    window.location = "{% url 'auth_second' %}?token=" + data.token;
                     break;
+                    
+                // FIXED: Handle error messages from WebSocket
+                case "error":
+                    console.error("WebSocket error:", data.error);
+                    alert("Authentication error: " + data.error);
+                    break;
+            }
+        };
+        
+        // FIXED: Add error handling for WebSocket connection
+        socket.onerror = function(error) {
+            console.error("WebSocket error:", error);
+            alert("Connection error. Please try again.");
+        };
+        
+        socket.onclose = function(event) {
+            if (!event.wasClean) {
+                console.error("WebSocket connection closed unexpectedly");
+                alert("Connection lost. Please refresh the page.");
             }
         };
     </script>
 
     <center>
       <H1>AUTHENTICATING</H1>
+      <p>Please check your email and click the authorization link.</p>
     </center>
 </body>
 </html>
