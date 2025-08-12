@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html lang="en-us" dir="ltr">
+<head>
+    <title>Test two factor login</title>
+</head>
+
+<body class=" dashboard"
+  data-admin-utc-offset="0">
+
+    <!-- Container -->
+    <div id="container">
+
+        <!-- Content -->
+        <div id="content" class="colM">
+
+          <h1>User login</h1>
+
+            <div id="content-main">
+
+                <form method="post" id="user_form" action="auth_first">
+                    {% csrf_token %}
+                    <fieldset class="module aligned wide">
+                    <div class="form-row field-username">
+                        <div>
+                            <label class="required" for="id_username">Username:</label>
+                            <input type="text" name="username" class="vTextField" maxlength="150" autocapitalize="none" autocomplete="username" autofocus required id="id_username">
+                        </div>
+                    </div>
+
+                    <div class="form-row field-password1">
+                        <div>
+                            <label class="required" for="id_password1">Password:</label>
+                            <input type="password" name="password" autocomplete="new-password" required id="id_password1">
+
+                        </div>
+                    </div>
+                    </fieldset>
+
+                    <div>
+                        <input type="submit" value="Sign in" class="default" name="login">
+                        {{ message|safe }}
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    <div>
+</body>

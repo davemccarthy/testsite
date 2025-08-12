@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authenticating</title>
+
+</head>
+<body>
+
+    <script>
+        const socket = new WebSocket('ws://' + window.location.host + '/ws/testsite/');
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log(data.message);
+
+            switch(data.message){
+
+                //  Connected - send auth_id
+                case "connected":
+
+                    socket.send(JSON.stringify({
+                        message: "authorize",
+                        auth_id: {{ auth_id }}
+                    }));
+                    break;
+
+                //  Thumbs up
+                case "authorized":
+                    window.location = "auth_second?token=" + data.token;
+                    break;
+            }
+        };
+    </script>
+
+    <center>
+      <H1>AUTHENTICATING</H1>
+    </center>
+</body>
+</html>
