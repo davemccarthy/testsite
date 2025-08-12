@@ -2,60 +2,418 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Authenticating</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authenticating - Two-Factor Authentication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .auth-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 36px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .auth-title {
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .auth-subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .progress-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e1e5e9;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 3px;
+            width: 0%;
+            animation: progress 3s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        .status-text {
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .status-detail {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .email-info {
+            background: #f0f4ff;
+            border: 1px solid #d1e7ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .email-info h3 {
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .email-info p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: #e1e5e9;
+            z-index: 1;
+        }
+
+        .step.active:not(:last-child)::after {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 18px;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .step-icon.pending {
+            background: #e1e5e9;
+            color: #999;
+        }
+
+        .step-icon.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .step-icon.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .step-text {
+            font-size: 11px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .step.active .step-text {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .error-message {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .retry-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            .auth-title {
+                font-size: 24px;
+            }
+            
+            .steps {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .step:not(:last-child)::after {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="auth-container">
+        <div class="auth-icon">🔐</div>
+        <h1 class="auth-title">Authenticating</h1>
+        <p class="auth-subtitle">Please check your email to complete the login process</p>
+
+        <div class="error-message" id="error-message">
+            <strong>Connection Error:</strong> <span id="error-text"></span>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="status-text" id="status-text">Establishing secure connection...</div>
+            <div class="status-detail" id="status-detail">Connecting to authentication server</div>
+        </div>
+
+        <div class="email-info">
+            <h3>📧 Email Authorization</h3>
+            <p>We've sent a secure authorization link to your email address. Click the link in your email to complete the login process.</p>
+        </div>
+
+        <div class="steps">
+            <div class="step active">
+                <div class="step-icon active">1</div>
+                <div class="step-text">Login</div>
+            </div>
+            <div class="step">
+                <div class="step-icon pending">2</div>
+                <div class="step-text">Email Auth</div>
+            </div>
+            <div class="step">
+                <div class="step-icon pending">3</div>
+                <div class="step-text">Complete</div>
+            </div>
+        </div>
+
+        <button class="retry-btn" id="retry-btn" onclick="location.reload()">
+            Retry Connection
+        </button>
+    </div>
 
     <script>
         const socket = new WebSocket('ws://' + window.location.host + '/ws/testsite/');
+        let currentStep = 1;
+
+        // Update status and progress
+        function updateStatus(text, detail) {
+            document.getElementById('status-text').textContent = text;
+            document.getElementById('status-detail').textContent = detail;
+        }
+
+        // Update step progress
+        function updateStep(stepNumber, status) {
+            const steps = document.querySelectorAll('.step');
+            const icons = document.querySelectorAll('.step-icon');
+            
+            // Reset all steps
+            steps.forEach((step, index) => {
+                step.classList.remove('active');
+                icons[index].className = 'step-icon pending';
+            });
+            
+            // Set completed steps
+            for (let i = 0; i < stepNumber; i++) {
+                icons[i].className = 'step-icon completed';
+            }
+            
+            // Set current step
+            if (stepNumber <= steps.length) {
+                steps[stepNumber - 1].classList.add('active');
+                icons[stepNumber - 1].className = 'step-icon active';
+            }
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('error-text').textContent = message;
+            document.getElementById('error-message').style.display = 'block';
+            document.getElementById('retry-btn').style.display = 'inline-block';
+            updateStatus('Connection Failed', 'Please check your connection and try again');
+        }
+
+        socket.onopen = function() {
+            updateStatus('Connected', 'Sending authorization request...');
+            updateStep(1, 'completed');
+            
+            // Send auth_id to server
+            socket.send(JSON.stringify({
+                message: "authorize",
+                auth_id: {{ auth_id }}
+            }));
+        };
 
         socket.onmessage = function(event) {
             const data = JSON.parse(event.data);
-            console.log(data.message);
+            console.log('Received:', data.message);
 
-            switch(data.message){
-
-                //  Connected - send auth_id
+            switch(data.message) {
                 case "connected":
-
+                    updateStatus('Connected', 'Sending authorization request...');
+                    updateStep(1, 'completed');
+                    
                     socket.send(JSON.stringify({
                         message: "authorize",
                         auth_id: {{ auth_id }}
                     }));
                     break;
 
-                //  Thumbs up
                 case "authorized":
-                    // FIXED: Use Django URL routing instead of hardcoded path
-                    window.location = "{% url 'auth_second' %}?token=" + data.token;
+                    updateStatus('Authorization Complete', 'Redirecting to secure area...');
+                    updateStep(3, 'completed');
+                    
+                    // Redirect to final authentication
+                    setTimeout(() => {
+                        window.location = "{% url 'auth_second' %}?token=" + data.token;
+                    }, 1000);
                     break;
                     
-                // FIXED: Handle error messages from WebSocket
                 case "error":
-                    console.error("WebSocket error:", data.error);
-                    alert("Authentication error: " + data.error);
+                    showError(data.error);
                     break;
             }
         };
-        
-        // FIXED: Add error handling for WebSocket connection
+
         socket.onerror = function(error) {
-            console.error("WebSocket error:", error);
-            alert("Connection error. Please try again.");
+            console.error('WebSocket error:', error);
+            showError('Connection failed. Please check your internet connection.');
         };
-        
+
         socket.onclose = function(event) {
             if (!event.wasClean) {
-                console.error("WebSocket connection closed unexpectedly");
-                alert("Connection lost. Please refresh the page.");
+                console.error('WebSocket connection closed unexpectedly');
+                showError('Connection lost. Please refresh the page to try again.');
             }
         };
-    </script>
 
-    <center>
-      <H1>AUTHENTICATING</H1>
-      <p>Please check your email and click the authorization link.</p>
-    </center>
+        // Add entrance animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.auth-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.6s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
 </body>
 </html>

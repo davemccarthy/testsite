@@ -1,50 +1,316 @@
 <!DOCTYPE html>
-
-<html lang="en-us" dir="ltr">
+<html lang="en">
 <head>
-    <title>Test two factor login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two-Factor Authentication Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .security-info {
+            margin-top: 24px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .security-info h3 {
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .security-info p {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .feature {
+            text-align: center;
+            flex: 1;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .feature-text {
+            font-size: 11px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+            
+            .features {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+
+        /* Loading animation for button */
+        .submit-btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .submit-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
 </head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>🔐 Secure Login</h1>
+            <p>Two-Factor Authentication Required</p>
+        </div>
 
-<body class=" dashboard"
-  data-admin-utc-offset="0">
+        {% if message %}
+        <div class="error-message">
+            {{ message|safe }}
+        </div>
+        {% endif %}
 
-    <!-- Container -->
-    <div id="container">
+        <form method="post" id="login-form" action="{% url 'auth_first' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    id="id_username"
+                    placeholder="Enter your username"
+                    maxlength="150" 
+                    autocapitalize="none" 
+                    autocomplete="username" 
+                    autofocus 
+                    required
+                >
+            </div>
 
-        <!-- Content -->
-        <div id="content" class="colM">
+            <div class="form-group">
+                <label for="id_password1">Password</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    id="id_password1"
+                    placeholder="Enter your password"
+                    autocomplete="current-password" 
+                    required
+                >
+            </div>
 
-          <h1>User login</h1>
+            <button type="submit" class="submit-btn" id="submit-btn">
+                Sign In Securely
+            </button>
+        </form>
 
-            <div id="content-main">
+        <div class="security-info">
+            <h3>🔒 Enhanced Security</h3>
+            <p>After entering your credentials, you'll receive an email with a secure authorization link to complete your login.</p>
+        </div>
 
-                <!-- FIXED: Use Django URL routing instead of hardcoded path -->
-                <form method="post" id="user_form" action="{% url 'auth_first' %}">
-                    {% csrf_token %}
-                    <fieldset class="module aligned wide">
-                    <div class="form-row field-username">
-                        <div>
-                            <label class="required" for="id_username">Username:</label>
-                            <input type="text" name="username" class="vTextField" maxlength="150" autocapitalize="none" autocomplete="username" autofocus required id="id_username">
-                        </div>
-                    </div>
-
-                    <div class="form-row field-password1">
-                        <div>
-                            <label class="required" for="id_password1">Password:</label>
-                            <input type="password" name="password" autocomplete="new-password" required id="id_password1">
-
-                        </div>
-                    </div>
-                    </fieldset>
-
-                    <div>
-                        <input type="submit" value="Sign in" class="default" name="login">
-                        {{ message|safe }}
-                    </div>
-
-                </form>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🛡️</div>
+                <div class="feature-text">Secure</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-text">Fast</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📧</div>
+                <div class="feature-text">Email Auth</div>
             </div>
         </div>
-    <div>
+    </div>
+
+    <script>
+        // Add loading state to form submission
+        document.getElementById('login-form').addEventListener('submit', function() {
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.classList.add('loading');
+            submitBtn.textContent = 'Authenticating...';
+        });
+
+        // Add some subtle animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.login-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.6s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
 </body>
+</html>
