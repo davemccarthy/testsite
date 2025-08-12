@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorization Successful - Secure Authentication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            color: white;
+            position: relative;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .status-message {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .progress-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            animation: progress 2s ease-out forwards;
+        }
+
+        @keyframes progress {
+            from {
+                width: 0%;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            background: #d4edda;
+            color: #155724;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+
+        .security-badge::before {
+            content: "🔒";
+            margin-right: 8px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .info-item h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .info-item p {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .redirect-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .footer p {
+            color: #666;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header, .content, .footer {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="success-icon">✅</div>
+            <h1>Authorization Successful!</h1>
+            <p>Your login has been verified and approved</p>
+        </div>
+
+        <div class="content">
+            <div class="status-message">
+                Thank you for completing the two-factor authentication process. Your account is now secure and you'll be redirected automatically.
+            </div>
+
+            <div class="security-badge">
+                Account Secured
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-text">Redirecting to your dashboard...</div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>Authentication</h3>
+                    <p>✅ Verified</p>
+                </div>
+                <div class="info-item">
+                    <h3>Security Level</h3>
+                    <p>🔒 High</p>
+                </div>
+                <div class="info-item">
+                    <h3>Session Status</h3>
+                    <p>🟢 Active</p>
+                </div>
+                <div class="info-item">
+                    <h3>Next Step</h3>
+                    <p>🚀 Redirect</p>
+                </div>
+            </div>
+
+            <div class="redirect-notice">
+                <strong>⏰ Automatic Redirect:</strong> You will be automatically redirected to your dashboard in a few seconds. If you're not redirected, please check your browser settings or contact support.
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🔐 Secure Authentication System | Your security is our priority</p>
+        </div>
+    </div>
+
+    <script>
+        // Add a small delay to show the success message before redirecting
+        setTimeout(() => {
+            // This will be handled by the WebSocket to redirect to the final page
+            console.log('Authorization successful - waiting for WebSocket redirect...');
+        }, 2000);
+    </script>
+</body>
+</html>

@@ -78,14 +78,17 @@ def authorize(request, token):
                     'message': 'authorized', 
                     'token': str(authObj.token2)
                 }))
-                return HttpResponse("THANK YOU", content_type='text/plain')
+                # FIXED: Return beautiful HTML template instead of plain text
+                return render(request, "authorize.html")
 
         print(f"authorize: client {authObj.id} not found")
-        return HttpResponseForbidden("Client not found")
+        # FIXED: Return beautiful error template instead of plain text
+        return render(request, "authorize_error.html")
 
     except ObjectDoesNotExist as e:
         print(f"authorize: token not found or expired: {e}")
-        return HttpResponseForbidden("Invalid or expired token")
+        # FIXED: Return beautiful error template instead of plain text
+        return render(request, "authorize_error.html")
 
 
 # STEP 3 - second login
